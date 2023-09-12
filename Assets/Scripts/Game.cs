@@ -72,12 +72,12 @@ public class Game : MonoBehaviour
     {
         playerMoves[boardNumber][squareNumber] = currentPlayer;
         currentPlayer = currentPlayer == 1 ? 2 : 1;
-        int boardWon = Utils.CheckWin(playerMoves[boardNumber], squareNumber);
+        int boardWon = CheckWin(playerMoves[boardNumber], squareNumber);
         int gameWon = 0;
         if (boardWon != 0)
         {
             boardWins[boardNumber] = boardWon;
-            gameWon = Utils.CheckWin(boardWins, boardNumber);
+            gameWon = CheckWin(boardWins, boardNumber);
             if (gameWon != 0)
             {
                 winner = gameWon;
@@ -95,7 +95,7 @@ public class Game : MonoBehaviour
         }
         else
         {
-            if (boardWins[boardNumber] != 0)
+            if (boardWins[squareNumber] != 0)
             {
                 for (int i = 0; i < 9; i++)
                 {
@@ -159,5 +159,39 @@ public class Game : MonoBehaviour
                 playerMoves[i][j] = 0;
             }
         }
+    }
+
+    private int CheckWin(int[] squares, int squareNumber)
+    {
+        int firstInRow = squareNumber - squareNumber % 3;
+        int firstInCol = squareNumber % 3;
+
+        if (squares[firstInRow] == squares[firstInRow + 1] && squares[firstInRow] == squares[firstInRow + 2])
+        {
+            return squares[squareNumber];
+        }
+
+        if (squares[firstInCol] == squares[firstInCol + 3] && squares[firstInCol] == squares[firstInCol + 6])
+        {
+            return squares[squareNumber];
+        }
+
+        if (squareNumber == 0 || squareNumber == 4 || squareNumber == 8)
+        {
+            if (squares[0] == squares[4] && squares[0] == squares[8])
+            {
+                return squares[squareNumber];
+            }
+        }
+
+        if (squareNumber == 2 || squareNumber == 4 || squareNumber == 6)
+        {
+            if (squares[2] == squares[4] && squares[2] == squares[6])
+            {
+                return squares[squareNumber];
+            }
+        }
+
+        return 0;
     }
 }
