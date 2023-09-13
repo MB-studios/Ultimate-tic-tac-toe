@@ -2,27 +2,27 @@ using UnityEngine;
 
 public class Square : MonoBehaviour
 {
-    private Board board;
+    private Game game;
     private int squareNumber;
     private BoxCollider2D boxCollider2D;
     private SpriteRenderer playerSpriteRenderer;
 
     void OnEnable()
     {
+        game = gameObject.GetComponentInParent<Game>();
         squareNumber = int.Parse(gameObject.name.Split(' ')[1]);
-        board = gameObject.GetComponentInParent<Board>();
         boxCollider2D = gameObject.GetComponent<BoxCollider2D>();
         playerSpriteRenderer = gameObject.GetComponent<SpriteRenderer>();
     }
 
     void Update()
     {
-        boxCollider2D.enabled = board.SquareIsActive(squareNumber);
-        playerSpriteRenderer.sprite = board.GetPlayerSquareSprite(squareNumber);
+        boxCollider2D.enabled = game.SquareIsActive(squareNumber);
+        playerSpriteRenderer.sprite = game.GetPlayerSquareSprite(squareNumber);
     }
 
     public void OnClick()
     {
-        board.PlayerMove(squareNumber);
+        game.PlayerMove(squareNumber);
     }
 }

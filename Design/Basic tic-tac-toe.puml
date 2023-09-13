@@ -1,30 +1,23 @@
 @startuml Basic tic-tac-toe
 class Game {
-    -int currentPlayer
-    -int winner
-    +int[] playerMoves
-    +Sprite player1
-    +Sprite player2
-    +Sprite backgroundActive
-    +Sprite backgroundInactive
-    +Sprite GetPlayerSprite(int squareNumber)
-    +Sprite GetBoardBackgroundSprite()
-    +void PlayerMove(int squareNumber)
-    +int CheckForWinner(int squareNumber)
-}
-class Board {
-    -Game game
-    -SpriteRenderer background
-    +void PlayerMove(int squareNumber)
+    int currentPlayer
+    int[] playerMoves
+    int winner
+    int[] playerWins
+    Sprite player1
+    Sprite player2
+    Sprite GetPlayerSprite(int squareNumber)
+    Sprite GetBoardBackgroundSprite()
+    void PlayerMove(int squareNumber)
+    int CheckForWinner(int squareNumber)
 }
 class Square {
-    -Board board
-    -int squareNumber
-    -BoxCollider2D boxCollider
-    -SpriteRenderer playerSprite
-    +void OnClick()
+    Game game
+    int squareNumber
+    BoxCollider2D boxCollider
+    SpriteRenderer playerSprite
+    void OnClick()
 }
-Game -- Board
-Board -- Square
+Game -- Square
 
 @enduml
