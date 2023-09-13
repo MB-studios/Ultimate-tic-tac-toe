@@ -6,6 +6,7 @@ class Game {
     int[] playerWins
     Sprite player1
     Sprite player2
+    void Start()
     Sprite GetPlayerSprite(int squareNumber)
     Sprite GetBoardBackgroundSprite()
     void PlayerMove(int squareNumber)
@@ -16,6 +17,8 @@ class Square {
     int squareNumber
     BoxCollider2D boxCollider
     SpriteRenderer playerSprite
+    void Start()
+    void Update()
     void OnClick()
 }
 Game -- Square

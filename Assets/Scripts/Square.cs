@@ -7,7 +7,7 @@ public class Square : MonoBehaviour
     private BoxCollider2D boxCollider2D;
     private SpriteRenderer playerSpriteRenderer;
 
-    void OnEnable()
+    void Start()
     {
         game = gameObject.GetComponentInParent<Game>();
         squareNumber = int.Parse(gameObject.name.Split(' ')[1]);
