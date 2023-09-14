@@ -16,7 +16,7 @@ class Square {
     Game game
     int squareNumber
     BoxCollider2D boxCollider
-    SpriteRenderer playerSprite
+    SpriteRenderer playerSpriteRenderer
     void Start()
     void Update()
     void OnClick()

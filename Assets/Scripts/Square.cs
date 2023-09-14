@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class Square : MonoBehaviour
 {
-    private Game game;
-    private int squareNumber;
-    private BoxCollider2D boxCollider2D;
-    private SpriteRenderer playerSpriteRenderer;
+    public Game game;
+    public int squareNumber;
+    public BoxCollider2D boxCollider2D;
+    public SpriteRenderer playerSpriteRenderer;
 
     void Start()
     {

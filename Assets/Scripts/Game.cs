@@ -10,8 +10,6 @@ public class Game : MonoBehaviour
     public Sprite player2Square;
     public Sprite player1Board;
     public Sprite player2Board;
-    public Sprite backgroundActive;
-    public Sprite backgroundInactive;
 
 
     void Start()
