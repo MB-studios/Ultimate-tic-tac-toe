@@ -34,8 +34,8 @@ public class UI : MonoBehaviour
         topPanel.sizeDelta = new Vector2(screenWidth, barHeight);
         bottomPanel.sizeDelta = new Vector2(screenWidth, barHeight);
 
-        player1Wins.text = game.GetPlayerWins(1).ToString();
-        player2Wins.text = game.GetPlayerWins(2).ToString();
+        player1Wins.text = game.GetPlayerWins((int)Player.X).ToString();
+        player2Wins.text = game.GetPlayerWins((int)Player.O).ToString();
 
         currentSprite = game.getCurrentPlayerSprite();
         if (currentSprite)

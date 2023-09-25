@@ -1,0 +1,3 @@
+mlagents-learn config/UltimateTicTacToe.yaml --run-id=FirstUltimateTicTacToe --force
+
+python -m tensorboard.main --logdir results

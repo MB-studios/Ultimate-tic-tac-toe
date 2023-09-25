@@ -1,19 +1,29 @@
 using UnityEngine;
 
+public enum Player
+{
+    none = -1,
+    X = 0,
+    O = 1,
+    draw = 2
+}
+
 public class Game : MonoBehaviour
 {
     public int currentPlayer;
     public int[][] playerMoves = { new int[9], new int[9], new int[9], new int[9], new int[9], new int[9], new int[9], new int[9], new int[9] };
     public int[] boardWins = new int[9];
-    public bool[] activeBoards = new bool[9];
-    private int winner = 0;
+    public int[] boardMoves = new int[9];
+    public int[] activeBoards = new int[9];
+    public int[] activeSquares = new int[81];
+    private int winner = (int)Player.none;
     public int[] playerWins = { 0, 0 };
-    public Sprite player1Square;
-    public Sprite player2Square;
-    public Sprite player1Board;
-    public Sprite player2Board;
-    public Sprite backgroundActive;
-    public Sprite backgroundInactive;
+    public Sprite[] playerSquareSprites = new Sprite[2];
+    public Sprite[] playerBoardSprites = new Sprite[2];
+    public Sprite[] backgroundSprites = new Sprite[2];
+    public bool AITraining = false;
+    public AgentManager agentManager;
+    public bool debug = false;
 
 
     void Start()
@@ -23,104 +33,157 @@ public class Game : MonoBehaviour
 
     public Sprite GetBoardBackgroundSprite(int subBoardNumber)
     {
-        return activeBoards[subBoardNumber] ? backgroundActive : backgroundInactive;
+        return backgroundSprites[activeBoards[subBoardNumber]];
     }
 
     public Sprite GetPlayerBoardSprite(int subBoardNumber)
     {
-        if (boardWins[subBoardNumber] == 1)
+        if (boardWins[subBoardNumber] == (int)Player.none || boardWins[subBoardNumber] == (int)Player.draw)
         {
-            return player1Board;
-        }
-        else if (boardWins[subBoardNumber] == 2)
-        {
-            return player2Board;
+            return null;
         }
         else
         {
-            return null;
+            return playerBoardSprites[boardWins[subBoardNumber]];
         }
     }
 
     public Sprite GetPlayerSquareSprite(int subBoardNumber, int squareNumber)
     {
-        if (playerMoves[subBoardNumber][squareNumber] == 1)
+        if (playerMoves[subBoardNumber][squareNumber] == (int)Player.none)
         {
-            return player1Square;
-        }
-        else if (playerMoves[subBoardNumber][squareNumber] == 2)
-        {
-            return player2Square;
+            return null;
         }
         else
         {
-            return null;
+            return playerSquareSprites[playerMoves[subBoardNumber][squareNumber]];
         }
     }
 
     public bool BoardIsActive(int subBoardNumber)
     {
-        return activeBoards[subBoardNumber] && winner == 0;
+        return activeBoards[subBoardNumber] == 1 && winner == (int)Player.none;
     }
 
     public bool SquareIsActive(int subBoardNumber, int squareNumber)
     {
-        return activeBoards[subBoardNumber] && playerMoves[subBoardNumber][squareNumber] == 0;
+        return activeSquares[subBoardNumber * 9 + squareNumber] == 1;
     }
 
     public void PlayerMove(int boardNumber, int squareNumber)
     {
+        if (debug) Debug.Log("PlayerMove: " + boardNumber + ", " + squareNumber);
+        float agentXreward = 0.0f;
+        float agentOReward = 0.0f;
         playerMoves[boardNumber][squareNumber] = currentPlayer;
-        currentPlayer = currentPlayer == 1 ? 2 : 1;
+        boardMoves[boardNumber]++;
+        currentPlayer = currentPlayer == (int)Player.X ? (int)Player.O : (int)Player.X;
         int boardWon = CheckWin(playerMoves[boardNumber], squareNumber);
-        int gameWon = 0;
-        if (boardWon != 0)
+        if (boardWon != (int)Player.none)
         {
-            boardWins[boardNumber] = boardWon;
-            gameWon = CheckWin(boardWins, boardNumber);
-            if (gameWon != 0)
+            if (AITraining)
             {
+                agentXreward = boardWon == (int)Player.X ? 0.2f : -0.1f;
+                agentOReward = boardWon == (int)Player.O ? 0.2f : -0.1f;
+            }
+            boardWins[boardNumber] = boardWon;
+            int gameWon = CheckWin(boardWins, boardNumber);
+            if (gameWon != (int)Player.none)
+            {
+                if (AITraining)
+                {
+                    agentXreward = boardWon == (int)Player.X ? 1.0f : -1.0f;
+                    agentOReward = boardWon == (int)Player.O ? 1.0f : -1.0f;
+                }
                 winner = gameWon;
-                playerWins[gameWon - 1]++;
+                playerWins[gameWon]++;
+                if (AITraining)
+                {
+                    NewGame();
+                    agentManager.NewGame();
+                }
+            }
+
+        }
+        else if (boardMoves[boardNumber] == 9)
+        {
+            boardWins[boardNumber] = (int)Player.draw;
+        }
+        SetActiveBoardsAndSquares(squareNumber);
+        if (AITraining)
+        {
+            bool movesAvaiable = false;
+            for (int b = 0; b < 9; b++)
+            {
+                if (activeBoards[b] == 1)
+                {
+                    movesAvaiable = true;
+                    break;
+                }
+            }
+            if (!movesAvaiable)
+            {
+                NewGame();
+                agentManager.NewGame();
             }
         }
+        agentManager.GiveRewards(agentXreward, agentOReward);
+    }
 
-        if (gameWon != 0)
+
+    public void SetActiveBoardsAndSquares(int squareNumber)
+    {
+        // Someone won the game, set all boards and squares to inactive
+        if (winner != (int)Player.none)
         {
-            for (int i = 0; i < 9; i++)
+            if (debug) Debug.Log("Game is won");
+            for (int b = 0; b < 9; b++)
             {
-
-                activeBoards[i] = false;
+                activeBoards[b] = 0;
+                for (int s = 0; s < 9; s++)
+                {
+                    activeSquares[b * 9 + s] = 0;
+                }
             }
         }
         else
         {
-            if (boardWins[squareNumber] != 0)
+            if (boardWins[squareNumber] > (int)Player.none)
             {
-                for (int i = 0; i < 9; i++)
+                if (debug) Debug.Log("The board that is next is already won or is filled up");
+                for (int b = 0; b < 9; b++)
                 {
-                    if (boardWins[i] == 0)
+                    bool boardIsActive = boardWins[b] <= (int)Player.none;
+                    activeBoards[b] = boardIsActive ? 1 : 0;
+                    for (int s = 0; s < 9; s++)
                     {
-                        activeBoards[i] = true;
+                        activeSquares[b * 9 + s] = boardIsActive && playerMoves[b][s] <= (int)Player.none ? 1 : 0;
                     }
-                    else
-                    {
-                        activeBoards[i] = false;
-                    }
-
                 }
             }
             else
             {
-                for (int i = 0; i < 9; i++)
+                if (debug) Debug.Log("The next board is not won and not full");
+                for (int b = 0; b < 9; b++)
                 {
-                    if (i == squareNumber || boardWins[i] != 0)
+                    if (b == squareNumber)
                     {
-                        activeBoards[i] = true;
+                        if (debug) Debug.Log("Setting board " + b + " to active");
+                        activeBoards[b] = 1;
+                        for (int s = 0; s < 9; s++)
+                        {
+                            activeSquares[b * 9 + s] = playerMoves[b][s] == (int)Player.none ? 1 : 0;
+                            if (debug) Debug.Log("Setting square " + s + " to " + activeSquares[b * 9 + s]);
+                        }
                     }
                     else
                     {
-                        activeBoards[i] = false;
+                        if (debug) Debug.Log("Setting board " + b + " to inactive");
+                        activeBoards[b] = 0;
+                        for (int s = 0; s < 9; s++)
+                        {
+                            activeSquares[b * 9 + s] = 0;
+                        }
                     }
                 }
             }
@@ -130,33 +193,36 @@ public class Game : MonoBehaviour
 
     public int GetPlayerWins(int player)
     {
-        return playerWins[player - 1];
+        return playerWins[player];
     }
 
     public Sprite getCurrentPlayerSprite()
     {
-        if (winner == 0)
+        if (winner != (int)Player.none)
         {
-            return currentPlayer == 1 ? player1Board : player2Board;
+            return null;
+
         }
         else
         {
-            return null;
+            return playerBoardSprites[currentPlayer];
         }
 
     }
 
     public void NewGame()
     {
-        currentPlayer = Random.Range(1, 3);
-        winner = 0;
+        currentPlayer = Random.Range((int)Player.X, (int)Player.O + 1);
+        boardMoves = new int[9];
+        winner = (int)Player.none;
         for (int i = 0; i < 9; i++)
         {
-            boardWins[i] = 0;
-            activeBoards[i] = true;
+            boardWins[i] = (int)Player.none;
+            activeBoards[i] = 1;
             for (int j = 0; j < 9; j++)
             {
-                playerMoves[i][j] = 0;
+                playerMoves[i][j] = (int)Player.none;
+                activeSquares[i * 9 + j] = 1;
             }
         }
     }
@@ -192,6 +258,6 @@ public class Game : MonoBehaviour
             }
         }
 
-        return 0;
+        return (int)Player.none;
     }
 }
