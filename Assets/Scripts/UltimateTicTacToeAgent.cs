@@ -30,7 +30,6 @@ public class UltimateTicTacToeAgent : Agent
         int subBoardNumber = actions.DiscreteActions[0] / 9;
         int squareNumber = actions.DiscreteActions[0] % 9;
         game.PlayerMove(subBoardNumber, squareNumber);
-        EndEpisode();
     }
 
     public override void WriteDiscreteActionMask(IDiscreteActionMask actionMask)

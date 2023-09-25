@@ -81,11 +81,6 @@ public class Game : MonoBehaviour
         int boardWon = CheckWin(playerMoves[boardNumber], squareNumber);
         if (boardWon != (int)Player.none)
         {
-            if (AITraining)
-            {
-                agentXreward = boardWon == (int)Player.X ? 0.2f : -0.1f;
-                agentOReward = boardWon == (int)Player.O ? 0.2f : -0.1f;
-            }
             boardWins[boardNumber] = boardWon;
             int gameWon = CheckWin(boardWins, boardNumber);
             if (gameWon != (int)Player.none)
@@ -94,6 +89,7 @@ public class Game : MonoBehaviour
                 {
                     agentXreward = boardWon == (int)Player.X ? 1.0f : -1.0f;
                     agentOReward = boardWon == (int)Player.O ? 1.0f : -1.0f;
+                    agentManager.GiveRewards(agentXreward, agentOReward);
                 }
                 winner = gameWon;
                 playerWins[gameWon]++;
@@ -127,7 +123,6 @@ public class Game : MonoBehaviour
                 agentManager.NewGame();
             }
         }
-        agentManager.GiveRewards(agentXreward, agentOReward);
     }
 
 
