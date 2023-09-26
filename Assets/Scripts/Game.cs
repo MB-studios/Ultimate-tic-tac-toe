@@ -381,7 +381,10 @@ public class Game : MonoBehaviour
                 NewGame();
                 agentManager.NewGame();
             }
-            agentManager.EndEpisode();
+            else if (boardWon != (int)Player.none)
+            {
+                agentManager.EndEpisode();
+            }
         }
 
     }
