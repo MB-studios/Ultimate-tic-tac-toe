@@ -12,7 +12,6 @@ public class AgentManager : MonoBehaviour
     void Start()
     {
         game = gameObject.GetComponent<Game>();
-        game.AITraining = true;
         game.agentManager = this;
         agentX = gameObject.transform.Find("AgentX").gameObject.GetComponent<UltimateTicTacToeAgent>();
         agentO = gameObject.transform.Find("AgentO").gameObject.GetComponent<UltimateTicTacToeAgent>();
@@ -35,28 +34,33 @@ public class AgentManager : MonoBehaviour
 
     private void RequestDecision()
     {
-        if (game.currentPlayer == (int)Player.X)
+        if (game.currentPlayer == (int)Player.X && agentX.human == false)
         {
             agentX.RequestDecision();
         }
-        else
+        else if (agentO.human == false)
         {
             agentO.RequestDecision();
         }
 
     }
 
-    public void GiveRewards(float agentXReward, float agentOReward)
+    public void AddRewards(float agentXReward, float agentOReward)
     {
         agentX.AddReward(agentXReward);
         agentO.AddReward(agentOReward);
+    }
+
+    public void EndEpisode()
+    {
+        agentX.EndEpisode();
+        agentO.EndEpisode();
     }
 
     public void NewGame()
     {
         playerChanged = true;
         lastPlayer = -1;
-        agentX.EndEpisode();
-        agentO.EndEpisode();
+        EndEpisode();
     }
 }

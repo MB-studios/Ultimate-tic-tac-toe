@@ -5,10 +5,12 @@ using Unity.MLAgents;
 using Unity.MLAgents.Sensors;
 using Unity.MLAgents.Actuators;
 using Unity.VisualScripting;
+using System.Linq.Expressions;
 
 public class UltimateTicTacToeAgent : Agent
 {
     public Game game;
+    public bool human = false;
     void Start()
     {
         game = gameObject.GetComponentInParent<Game>();
@@ -23,6 +25,10 @@ public class UltimateTicTacToeAgent : Agent
                 sensor.AddObservation(game.playerMoves[b][s]);
             }
         }
+        for (int b = 0; b < 9; b++)
+        {
+            sensor.AddObservation(game.boardWins[b]);
+        }
     }
 
     public override void OnActionReceived(ActionBuffers actions)
@@ -30,18 +36,13 @@ public class UltimateTicTacToeAgent : Agent
         int subBoardNumber = actions.DiscreteActions[0] / 9;
         int squareNumber = actions.DiscreteActions[0] % 9;
         game.PlayerMove(subBoardNumber, squareNumber);
-        EndEpisode();
     }
 
     public override void WriteDiscreteActionMask(IDiscreteActionMask actionMask)
     {
-        int counter = 0;
-        for (int b = 0; b < 9; b++)
+        for (int a = 0; a < 81; a++)
         {
-            for (int s = 0; s < 9; s++)
-            {
-                actionMask.SetActionEnabled(0, counter++, game.activeSquares[b * 9 + s] == 1);
-            }
+            actionMask.SetActionEnabled(0, a, game.activeSquares[a] == 1);
         }
     }
 }
