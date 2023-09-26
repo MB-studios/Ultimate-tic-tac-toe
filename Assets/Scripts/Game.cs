@@ -34,7 +34,7 @@ public class Game : MonoBehaviour
     private float gamePlaceTwoReward = 0.3f;
     private float gamePlaceOneUncontendedReward = 0.05f;
     private float gamePlaceOneContendedReward = 0.01f;
-    private float boardLossReward = -0.2f;
+    private float boardLossReward = -0.5f;
     private float boardBlockReward = 0.05f;
     private float boardPlaceTwoReward = 0.03f;
     private float boardPlaceOneUncontendedReward = 0.005f;
@@ -381,10 +381,7 @@ public class Game : MonoBehaviour
                 NewGame();
                 agentManager.NewGame();
             }
-            else if (boardWon != (int)Player.none)
-            {
-                agentManager.EndEpisode();
-            }
+            agentManager.EndEpisode();
         }
 
     }
