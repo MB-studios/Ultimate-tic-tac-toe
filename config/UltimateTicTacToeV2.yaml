@@ -3,30 +3,30 @@ behaviors:
     trainer_type: ppo
     hyperparameters:
       learning_rate: 3e-4
-      batch_size: 10000
-      buffer_size: 100000
-      learning_rate_schedule: linear
+      batch_size: 512
+      buffer_size: 10240
+      learning_rate_schedule: constant
       beta: 1.0e-4
-      epsilon: 0.3
+      epsilon: 0.2
       lambd: 0.95
       num_epoch: 3
     network_settings:
-      hidden_units: 512
-      num_layers: 3
+      hidden_units: 128
+      num_layers: 2
       normalize: false
       vis_encode_type: simple
     reward_signals:
       extrinsic:
         strength: 1.0
         gamma: 0.99
-    summary_freq: 500000
+    summary_freq: 10000
     time_horizon: 64
-    max_steps: 50000000
+    max_steps: 1000000
     keep_checkpoints: 10
-    checkpoint_interval: 5000000
+    checkpoint_interval: 100000
     threaded: false
     self_play:
-      save_steps: 100000
+      save_steps: 20000
       swap_steps: 10000
       play_against_latest_model_ratio: 0.5
       window: 10

@@ -17,8 +17,13 @@ public class AgentManager : MonoBehaviour
         agentO = gameObject.transform.Find("AgentO").gameObject.GetComponent<UltimateTicTacToeAgent>();
     }
 
+
+    public double executionTimeAverage = 0;
+    private int executionTimeCount = 0;
+
     private void FixedUpdate()
     {
+        double start = Time.realtimeSinceStartupAsDouble;
         if (lastPlayer != game.currentPlayer)
         {
             lastPlayer = game.currentPlayer;
@@ -29,6 +34,9 @@ public class AgentManager : MonoBehaviour
             playerChanged = false;
             RequestDecision();
         }
+        double end = Time.realtimeSinceStartupAsDouble;
+        executionTimeAverage = (executionTimeAverage * executionTimeCount + (end - start)) / (executionTimeCount + 1);
+        executionTimeCount++;
     }
 
 
@@ -38,7 +46,7 @@ public class AgentManager : MonoBehaviour
         {
             agentX.RequestDecision();
         }
-        else if (agentO.human == false)
+        else if (game.currentPlayer == (int)Player.O && agentO.human == false)
         {
             agentO.RequestDecision();
         }

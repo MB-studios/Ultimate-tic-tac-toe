@@ -28,16 +28,14 @@ public class Game : MonoBehaviour
     public bool debug = false;
     public bool AIDebug = false;
 
-    private float gameWinReawrd = 1.0f;
-    private float gameLossReward = -1.0f;
-    private float gameBlockReward = 0.5f;
-    private float gamePlaceTwoReward = 0.3f;
-    private float gamePlaceOneUncontendedReward = 0.05f;
-    private float gamePlaceOneContendedReward = 0.01f;
-    private float boardLossReward = -0.5f;
-    private float boardBlockReward = 0.05f;
-    private float boardPlaceTwoReward = 0.03f;
-    private float boardPlaceOneUncontendedReward = 0.005f;
+    private float gameWinReward = 1.0f;
+    private float boardBlockReward = 0.5f;
+    private float boardPlaceTwoReward = 0.3f;
+    private float boardPlaceOneUncontendedReward = 0.05f;
+    private float boardPlaceOneContendedReward = 0.01f;
+    private float squareBlockReward = 0.05f;
+    private float squarePlaceTwoReward = 0.03f;
+    private float squarePlaceOneUncontendedReward = 0.005f;
 
 
     void Start()
@@ -84,8 +82,13 @@ public class Game : MonoBehaviour
         return activeSquares[subBoardNumber * 9 + squareNumber] == 1;
     }
 
+    public double PlayerMoveAverage = 0;
+    private int PlayerMoveCount = 0;
+
     public void PlayerMove(int boardNumber, int squareNumber)
     {
+        double start = Time.realtimeSinceStartupAsDouble;
+
         if (debug) Debug.Log("PlayerMove: " + boardNumber + ", " + squareNumber);
         playerMoves[boardNumber][squareNumber] = currentPlayer;
         boardMoves[boardNumber]++;
@@ -155,8 +158,8 @@ public class Game : MonoBehaviour
 
             if (gameWon == player)
             {
-                rewards[player] = gameWinReawrd;
-                rewards[opponent] = gameLossReward;
+                rewards[player] = gameWinReward;
+                rewards[opponent] = -gameWinReward;
                 if (AIDebug) Debug.Log("Game won, rewards: " + rewards[(int)Player.X] + ", " + rewards[(int)Player.O]);
             }
             else if (boardWon == player)
@@ -199,43 +202,51 @@ public class Game : MonoBehaviour
 
                 if (boardRowMoves[opponent] == 2)
                 {
-                    rewards[player] += gameBlockReward;
+                    rewards[player] += boardBlockReward;
+                    rewards[opponent] -= boardBlockReward;
                     if (AIDebug) Debug.Log("Blocked opponents boardRow, rewards: " + rewards[(int)Player.X] + ", " + rewards[(int)Player.O]);
                 }
                 else if (boardRowMoves[player] == 2 && boardRowMoves[opponent] == 0)
                 {
-                    rewards[player] += gamePlaceTwoReward;
+                    rewards[player] += boardPlaceTwoReward;
+                    rewards[opponent] -= boardPlaceTwoReward;
                     if (AIDebug) Debug.Log("Placed two in a boardRow on an empty boardRow, rewards: " + rewards[(int)Player.X] + ", " + rewards[(int)Player.O]);
                 }
                 else if (boardRowMoves[player] == 1 && boardRowMoves[opponent] == 0)
                 {
-                    rewards[player] += gamePlaceOneUncontendedReward;
+                    rewards[player] += boardPlaceOneUncontendedReward;
+                    rewards[opponent] -= boardPlaceOneUncontendedReward;
                     if (AIDebug) Debug.Log("Placed one on an empty boardRow, rewards: " + rewards[(int)Player.X] + ", " + rewards[(int)Player.O]);
                 }
                 else
                 {
-                    rewards[player] += gamePlaceOneContendedReward;
+                    rewards[player] += boardPlaceOneContendedReward;
+                    rewards[opponent] -= boardPlaceOneContendedReward;
                     if (AIDebug) Debug.Log("Board won on occupied row, rewards: " + rewards[(int)Player.X] + ", " + rewards[(int)Player.O]);
                 }
 
                 if (boardColMoves[opponent] == 2)
                 {
-                    rewards[player] += gameBlockReward;
+                    rewards[player] += boardBlockReward;
+                    rewards[opponent] -= boardBlockReward;
                     if (AIDebug) Debug.Log("Blocked opponents boardCol, rewards: " + rewards[(int)Player.X] + ", " + rewards[(int)Player.O]);
                 }
                 else if (boardColMoves[player] == 2 && boardColMoves[opponent] == 0)
                 {
-                    rewards[player] += gamePlaceTwoReward;
+                    rewards[player] += boardPlaceTwoReward;
+                    rewards[opponent] -= boardPlaceTwoReward;
                     if (AIDebug) Debug.Log("Placed two in a boardCol on an empty boardCol, rewards: " + rewards[(int)Player.X] + ", " + rewards[(int)Player.O]);
                 }
                 else if (boardColMoves[player] == 1 && boardColMoves[opponent] == 0)
                 {
-                    rewards[player] += gamePlaceOneUncontendedReward;
+                    rewards[player] += boardPlaceOneUncontendedReward;
+                    rewards[opponent] -= boardPlaceOneUncontendedReward;
                     if (AIDebug) Debug.Log("Placed one on an empty boardCol, rewards: " + rewards[(int)Player.X] + ", " + rewards[(int)Player.O]);
                 }
                 else
                 {
-                    rewards[player] += gamePlaceOneContendedReward;
+                    rewards[player] += boardPlaceOneContendedReward;
+                    rewards[opponent] -= boardPlaceOneContendedReward;
                     if (AIDebug) Debug.Log("Board won on occupied col, rewards: " + rewards[(int)Player.X] + ", " + rewards[(int)Player.O]);
                 }
 
@@ -243,22 +254,26 @@ public class Game : MonoBehaviour
                 {
                     if (boardDownDiaMoves[opponent] == 2)
                     {
-                        rewards[player] += gameBlockReward;
+                        rewards[player] += boardBlockReward;
+                        rewards[opponent] -= boardBlockReward;
                         if (AIDebug) Debug.Log("Blocked opponents boardDownDia, rewards: " + rewards[(int)Player.X] + ", " + rewards[(int)Player.O]);
                     }
                     else if (boardDownDiaMoves[player] == 2 && boardDownDiaMoves[opponent] == 0)
                     {
-                        rewards[player] += gamePlaceTwoReward;
+                        rewards[player] += boardPlaceTwoReward;
+                        rewards[opponent] -= boardPlaceTwoReward;
                         if (AIDebug) Debug.Log("Placed two in a boardDownDia on an empty boardDownDia, rewards: " + rewards[(int)Player.X] + ", " + rewards[(int)Player.O]);
                     }
                     else if (boardDownDiaMoves[player] == 1 && boardDownDiaMoves[opponent] == 0)
                     {
-                        rewards[player] += gamePlaceOneUncontendedReward;
+                        rewards[player] += boardPlaceOneUncontendedReward;
+                        rewards[opponent] -= boardPlaceOneUncontendedReward;
                         if (AIDebug) Debug.Log("Placed one on an empty boardDownDia, rewards: " + rewards[(int)Player.X] + ", " + rewards[(int)Player.O]);
                     }
                     else
                     {
-                        rewards[player] += gamePlaceOneContendedReward;
+                        rewards[player] += boardPlaceOneContendedReward;
+                        rewards[opponent] -= boardPlaceOneContendedReward;
                         if (AIDebug) Debug.Log("Board won on occupied downDia, rewards: " + rewards[(int)Player.X] + ", " + rewards[(int)Player.O]);
                     }
                 }
@@ -267,59 +282,67 @@ public class Game : MonoBehaviour
                 {
                     if (boardUpDiaMoves[opponent] == 2)
                     {
-                        rewards[player] += gameBlockReward;
+                        rewards[player] += boardBlockReward;
+                        rewards[opponent] -= boardBlockReward;
                         if (AIDebug) Debug.Log("Blocked opponents boardUpDia, rewards: " + rewards[(int)Player.X] + ", " + rewards[(int)Player.O]);
                     }
                     else if (boardUpDiaMoves[player] == 2 && boardUpDiaMoves[opponent] == 0)
                     {
-                        rewards[player] += gamePlaceTwoReward;
+                        rewards[player] += boardPlaceTwoReward;
+                        rewards[opponent] -= boardPlaceTwoReward;
                         if (AIDebug) Debug.Log("Placed two in a boardUpDia on an empty boardUpDia, rewards: " + rewards[(int)Player.X] + ", " + rewards[(int)Player.O]);
                     }
                     else if (boardUpDiaMoves[player] == 1 && boardUpDiaMoves[opponent] == 0)
                     {
-                        rewards[player] += gamePlaceOneUncontendedReward;
+                        rewards[player] += boardPlaceOneUncontendedReward;
+                        rewards[opponent] -= boardPlaceOneUncontendedReward;
                         if (AIDebug) Debug.Log("Placed one on an empty boardUpDia, rewards: " + rewards[(int)Player.X] + ", " + rewards[(int)Player.O]);
                     }
                     else
                     {
-                        rewards[player] += gamePlaceOneContendedReward;
+                        rewards[player] += boardPlaceOneContendedReward;
+                        rewards[opponent] -= boardPlaceOneContendedReward;
                         if (AIDebug) Debug.Log("Board won on occupied upDia, rewards: " + rewards[(int)Player.X] + ", " + rewards[(int)Player.O]);
                     }
                 }
-
-                rewards[opponent] += boardLossReward;
             }
             else
             {
                 if (rowMoves[opponent] == 2)
                 {
-                    rewards[player] += boardBlockReward;
+                    rewards[player] += squareBlockReward;
+                    rewards[opponent] -= squareBlockReward;
                     if (AIDebug) Debug.Log("Blocked opponents row, rewards: " + rewards[(int)Player.X] + ", " + rewards[(int)Player.O]);
                 }
                 else if (rowMoves[player] == 2 && rowMoves[opponent] == 0)
                 {
-                    rewards[player] += boardPlaceTwoReward;
+                    rewards[player] += squarePlaceTwoReward;
+                    rewards[opponent] -= squarePlaceTwoReward;
                     if (AIDebug) Debug.Log("Placed two in a row on an empty row, rewards: " + rewards[(int)Player.X] + ", " + rewards[(int)Player.O]);
                 }
                 else if (rowMoves[player] == 1 && rowMoves[opponent] == 0)
                 {
-                    rewards[player] += boardPlaceOneUncontendedReward;
+                    rewards[player] += squarePlaceOneUncontendedReward;
+                    rewards[opponent] -= squarePlaceOneUncontendedReward;
                     if (AIDebug) Debug.Log("Placed one on an empty row, rewards: " + rewards[(int)Player.X] + ", " + rewards[(int)Player.O]);
                 }
 
                 if (colMoves[opponent] == 2)
                 {
-                    rewards[player] += boardBlockReward;
+                    rewards[player] += squareBlockReward;
+                    rewards[opponent] -= squareBlockReward;
                     if (AIDebug) Debug.Log("Blocked opponents col, rewards: " + rewards[(int)Player.X] + ", " + rewards[(int)Player.O]);
                 }
                 else if (colMoves[player] == 2 && colMoves[opponent] == 0)
                 {
-                    rewards[player] += boardPlaceTwoReward;
+                    rewards[player] += squarePlaceTwoReward;
+                    rewards[opponent] -= squarePlaceTwoReward;
                     if (AIDebug) Debug.Log("Placed two in a col on an empty col, rewards: " + rewards[(int)Player.X] + ", " + rewards[(int)Player.O]);
                 }
                 else if (colMoves[player] == 1 && colMoves[opponent] == 0)
                 {
-                    rewards[player] += boardPlaceOneUncontendedReward;
+                    rewards[player] += squarePlaceOneUncontendedReward;
+                    rewards[opponent] -= squarePlaceOneUncontendedReward;
                     if (AIDebug) Debug.Log("Placed one on an empty col, rewards: " + rewards[(int)Player.X] + ", " + rewards[(int)Player.O]);
                 }
 
@@ -327,17 +350,20 @@ public class Game : MonoBehaviour
                 {
                     if (downDiaMoves[opponent] == 2)
                     {
-                        rewards[player] += boardBlockReward;
+                        rewards[player] += squareBlockReward;
+                        rewards[opponent] -= squareBlockReward;
                         if (AIDebug) Debug.Log("Blocked opponents downDia, rewards: " + rewards[(int)Player.X] + ", " + rewards[(int)Player.O]);
                     }
                     else if (downDiaMoves[player] == 2 && downDiaMoves[opponent] == 0)
                     {
-                        rewards[player] += boardPlaceTwoReward;
+                        rewards[player] += squarePlaceTwoReward;
+                        rewards[opponent] -= squarePlaceTwoReward;
                         if (AIDebug) Debug.Log("Placed two in a downDia on an empty downDia, rewards: " + rewards[(int)Player.X] + ", " + rewards[(int)Player.O]);
                     }
                     else if (downDiaMoves[player] == 1 && downDiaMoves[opponent] == 0)
                     {
-                        rewards[player] += boardPlaceOneUncontendedReward;
+                        rewards[player] += squarePlaceOneUncontendedReward;
+                        rewards[opponent] -= squarePlaceOneUncontendedReward;
                         if (AIDebug) Debug.Log("Placed one on an empty downDia, rewards: " + rewards[(int)Player.X] + ", " + rewards[(int)Player.O]);
                     }
                 }
@@ -347,17 +373,20 @@ public class Game : MonoBehaviour
                 {
                     if (upDiaMoves[opponent] == 2)
                     {
-                        rewards[player] += boardBlockReward;
+                        rewards[player] += squareBlockReward;
+                        rewards[opponent] -= squareBlockReward;
                         if (AIDebug) Debug.Log("Blocked opponents upDia, rewards: " + rewards[(int)Player.X] + ", " + rewards[(int)Player.O]);
                     }
                     else if (upDiaMoves[player] == 2 && upDiaMoves[opponent] == 0)
                     {
-                        rewards[player] += boardPlaceTwoReward;
+                        rewards[player] += squarePlaceTwoReward;
+                        rewards[opponent] -= squarePlaceTwoReward;
                         if (AIDebug) Debug.Log("Placed two in a upDia on an empty upDia, rewards: " + rewards[(int)Player.X] + ", " + rewards[(int)Player.O]);
                     }
                     else if (upDiaMoves[player] == 1 && upDiaMoves[opponent] == 0)
                     {
-                        rewards[player] += boardPlaceOneUncontendedReward;
+                        rewards[player] += squarePlaceOneUncontendedReward;
+                        rewards[opponent] -= squarePlaceOneUncontendedReward;
                         if (AIDebug) Debug.Log("Placed one on an empty upDia, rewards: " + rewards[(int)Player.X] + ", " + rewards[(int)Player.O]);
                     }
                 }
@@ -387,11 +416,20 @@ public class Game : MonoBehaviour
             }
         }
 
+        double end = Time.realtimeSinceStartupAsDouble;
+        PlayerMoveAverage = (PlayerMoveAverage * PlayerMoveCount + (end - start)) / (PlayerMoveCount + 1);
+        PlayerMoveCount++;
+
     }
 
 
+    public double SetActiveBoardsAndSquaresAverage = 0;
+    private int SetActiveBoardsAndSquaresCount = 0;
+
     public void SetActiveBoardsAndSquares(int squareNumber)
     {
+        double start = Time.realtimeSinceStartupAsDouble;
+
         if (winner != (int)Player.none)
         {
             if (debug) Debug.Log("Game is won");
@@ -447,6 +485,9 @@ public class Game : MonoBehaviour
             }
         }
 
+        double end = Time.realtimeSinceStartupAsDouble;
+        SetActiveBoardsAndSquaresAverage = (SetActiveBoardsAndSquaresAverage * SetActiveBoardsAndSquaresCount + (end - start)) / (SetActiveBoardsAndSquaresCount + 1);
+        SetActiveBoardsAndSquaresCount++;
     }
 
     public int GetPlayerWins(int player)
@@ -488,37 +529,44 @@ public class Game : MonoBehaviour
         }
     }
 
+    public double CheckWinAverage = 0;
+    private int CheckWinCount = 0;
+
     private int CheckWin(int[] squares, int squareNumber)
     {
+        double start = Time.realtimeSinceStartupAsDouble;
+
         int firstInRow = squareNumber - squareNumber % 3;
         int firstInCol = squareNumber % 3;
+        int player = (int)Player.none;
 
         if (squares[firstInRow] == squares[firstInRow + 1] && squares[firstInRow] == squares[firstInRow + 2])
         {
-            return squares[squareNumber];
+            player = squares[squareNumber];
         }
-
-        if (squares[firstInCol] == squares[firstInCol + 3] && squares[firstInCol] == squares[firstInCol + 6])
+        else if (squares[firstInCol] == squares[firstInCol + 3] && squares[firstInCol] == squares[firstInCol + 6])
         {
-            return squares[squareNumber];
+            player = squares[squareNumber];
         }
-
-        if (squareNumber == 0 || squareNumber == 4 || squareNumber == 8)
+        else if (squareNumber == 0 || squareNumber == 4 || squareNumber == 8)
         {
             if (squares[0] == squares[4] && squares[0] == squares[8])
             {
-                return squares[squareNumber];
+                player = squares[squareNumber];
             }
         }
-
-        if (squareNumber == 2 || squareNumber == 4 || squareNumber == 6)
+        else if (squareNumber == 2 || squareNumber == 4 || squareNumber == 6)
         {
             if (squares[2] == squares[4] && squares[2] == squares[6])
             {
-                return squares[squareNumber];
+                player = squares[squareNumber];
             }
         }
 
-        return (int)Player.none;
+        double end = Time.realtimeSinceStartupAsDouble;
+        CheckWinAverage = (CheckWinAverage * CheckWinCount + (end - start)) / (CheckWinCount + 1);
+        CheckWinCount++;
+
+        return player;
     }
 }
