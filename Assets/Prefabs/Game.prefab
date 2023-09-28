@@ -4209,7 +4209,9 @@ MonoBehaviour:
   AITraining: 1
   agentManager: {fileID: 0}
   debug: 0
-  AIDebug: 0
+  PlayerMoveAverage: 0
+  SetActiveBoardsAndSquaresAverage: 0
+  CheckWinAverage: 0
 --- !u!212 &7246878606591706119
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -4279,6 +4281,8 @@ MonoBehaviour:
   agentO: {fileID: 0}
   playerChanged: 1
   lastPlayer: -1
+  RewardDebug: 0
+  executionTimeAverage: 0
 --- !u!1 &3013305811603774719
 GameObject:
   m_ObjectHideFlags: 0
@@ -7231,7 +7235,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 90
+    VectorObservationSize: 81
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 0
@@ -7265,6 +7269,8 @@ MonoBehaviour:
   hasUpgradedFromAgentParameters: 1
   MaxStep: 0
   game: {fileID: 0}
+  agentManager: {fileID: 0}
+  player: 0
   human: 0
 --- !u!1 &4658532681164945566
 GameObject:
@@ -11106,7 +11112,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 90
+    VectorObservationSize: 81
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 0
@@ -11140,6 +11146,8 @@ MonoBehaviour:
   hasUpgradedFromAgentParameters: 1
   MaxStep: 0
   game: {fileID: 0}
+  agentManager: {fileID: 0}
+  player: 0
   human: 0
 --- !u!1 &7623855362872930744
 GameObject:

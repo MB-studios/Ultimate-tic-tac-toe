@@ -10,6 +10,8 @@ using System.Linq.Expressions;
 public class UltimateTicTacToeAgent : Agent
 {
     public Game game;
+    public AgentManager agentManager;
+    public int player;
     public bool human = false;
     void Start()
     {
@@ -18,17 +20,8 @@ public class UltimateTicTacToeAgent : Agent
 
     public override void CollectObservations(VectorSensor sensor)
     {
-        for (int b = 0; b < 9; b++)
-        {
-            for (int s = 0; s < 9; s++)
-            {
-                sensor.AddObservation(game.playerMoves[b][s]);
-            }
-        }
-        for (int b = 0; b < 9; b++)
-        {
-            sensor.AddObservation(game.boardWins[b]);
-        }
+        sensor.AddObservation(agentManager.GetObservations(player));
+
     }
 
     public override void OnActionReceived(ActionBuffers actions)

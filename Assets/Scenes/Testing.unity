@@ -333,6 +333,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 930277006120034743, guid: 98feb40b84a94b9468a8567da1a0cea6, type: 3}
+      propertyPath: RewardDebug
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1117034252542131368, guid: 98feb40b84a94b9468a8567da1a0cea6, type: 3}
       propertyPath: human
       value: 0
@@ -371,7 +375,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7810973104890045487, guid: 98feb40b84a94b9468a8567da1a0cea6, type: 3}
       propertyPath: human
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
