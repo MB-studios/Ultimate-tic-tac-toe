@@ -1,0 +1,111 @@
+{
+    "UltimateTicTacToe": {
+        "checkpoints": [
+            {
+                "steps": 4999998,
+                "file_path": "results\\FirstUltimateTicTacToe3.2\\UltimateTicTacToe\\UltimateTicTacToe-4999998.onnx",
+                "reward": 0.04421221864951769,
+                "creation_time": 1695942261.3880093,
+                "auxillary_file_paths": [
+                    "results\\FirstUltimateTicTacToe3.2\\UltimateTicTacToe\\UltimateTicTacToe-4999998.pt"
+                ]
+            },
+            {
+                "steps": 7499992,
+                "file_path": "results\\FirstUltimateTicTacToe3.2\\UltimateTicTacToe\\UltimateTicTacToe-7499992.onnx",
+                "reward": 0.04574881312041433,
+                "creation_time": 1695945699.728791,
+                "auxillary_file_paths": [
+                    "results\\FirstUltimateTicTacToe3.2\\UltimateTicTacToe\\UltimateTicTacToe-7499992.pt"
+                ]
+            },
+            {
+                "steps": 9999995,
+                "file_path": "results\\FirstUltimateTicTacToe3.2\\UltimateTicTacToe\\UltimateTicTacToe-9999995.onnx",
+                "reward": 0.03810408921933085,
+                "creation_time": 1695949115.5862677,
+                "auxillary_file_paths": [
+                    "results\\FirstUltimateTicTacToe3.2\\UltimateTicTacToe\\UltimateTicTacToe-9999995.pt"
+                ]
+            },
+            {
+                "steps": 12499994,
+                "file_path": "results\\FirstUltimateTicTacToe3.2\\UltimateTicTacToe\\UltimateTicTacToe-12499994.onnx",
+                "reward": 0.04330512692882031,
+                "creation_time": 1695952519.5610383,
+                "auxillary_file_paths": [
+                    "results\\FirstUltimateTicTacToe3.2\\UltimateTicTacToe\\UltimateTicTacToe-12499994.pt"
+                ]
+            },
+            {
+                "steps": 14999999,
+                "file_path": "results\\FirstUltimateTicTacToe3.2\\UltimateTicTacToe\\UltimateTicTacToe-14999999.onnx",
+                "reward": 0.04584681769147789,
+                "creation_time": 1695955922.0955727,
+                "auxillary_file_paths": [
+                    "results\\FirstUltimateTicTacToe3.2\\UltimateTicTacToe\\UltimateTicTacToe-14999999.pt"
+                ]
+            },
+            {
+                "steps": 17499999,
+                "file_path": "results\\FirstUltimateTicTacToe3.2\\UltimateTicTacToe\\UltimateTicTacToe-17499999.onnx",
+                "reward": 0.05493207324276432,
+                "creation_time": 1695959259.6072676,
+                "auxillary_file_paths": [
+                    "results\\FirstUltimateTicTacToe3.2\\UltimateTicTacToe\\UltimateTicTacToe-17499999.pt"
+                ]
+            },
+            {
+                "steps": 19999995,
+                "file_path": "results\\FirstUltimateTicTacToe3.2\\UltimateTicTacToe\\UltimateTicTacToe-19999995.onnx",
+                "reward": 0.03650586701434159,
+                "creation_time": 1695962604.958193,
+                "auxillary_file_paths": [
+                    "results\\FirstUltimateTicTacToe3.2\\UltimateTicTacToe\\UltimateTicTacToe-19999995.pt"
+                ]
+            },
+            {
+                "steps": 22499990,
+                "file_path": "results\\FirstUltimateTicTacToe3.2\\UltimateTicTacToe\\UltimateTicTacToe-22499990.onnx",
+                "reward": 0.035430224150397684,
+                "creation_time": 1695966010.656444,
+                "auxillary_file_paths": [
+                    "results\\FirstUltimateTicTacToe3.2\\UltimateTicTacToe\\UltimateTicTacToe-22499990.pt"
+                ]
+            },
+            {
+                "steps": 24999984,
+                "file_path": "results\\FirstUltimateTicTacToe3.2\\UltimateTicTacToe\\UltimateTicTacToe-24999984.onnx",
+                "reward": 0.031302876480541454,
+                "creation_time": 1695969408.757673,
+                "auxillary_file_paths": [
+                    "results\\FirstUltimateTicTacToe3.2\\UltimateTicTacToe\\UltimateTicTacToe-24999984.pt"
+                ]
+            },
+            {
+                "steps": 25000001,
+                "file_path": "results\\FirstUltimateTicTacToe3.2\\UltimateTicTacToe\\UltimateTicTacToe-25000001.onnx",
+                "reward": 0.03125,
+                "creation_time": 1695969408.7997086,
+                "auxillary_file_paths": [
+                    "results\\FirstUltimateTicTacToe3.2\\UltimateTicTacToe\\UltimateTicTacToe-25000001.pt"
+                ]
+            }
+        ],
+        "elo": 2377.491647535256,
+        "final_checkpoint": {
+            "steps": 25000001,
+            "file_path": "results\\FirstUltimateTicTacToe3.2\\UltimateTicTacToe.onnx",
+            "reward": 0.03125,
+            "creation_time": 1695969408.7997086,
+            "auxillary_file_paths": [
+                "results\\FirstUltimateTicTacToe3.2\\UltimateTicTacToe\\UltimateTicTacToe-25000001.pt"
+            ]
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.3.0",
+        "mlagents_version": "0.30.0",
+        "torch_version": "1.7.1+cu110"
+    }
+}
